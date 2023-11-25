@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Rabattcode Anforderung</title>
+  <script src="https://unpkg.com/htmx.org"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('rabattcodeForm').addEventListener('submit', function(event) {
+        if (!validateEmail(document.getElementById('email').value)) {
+          alert('Bitte geben Sie eine gültige E-Mail-Adresse ein.');
+          event.preventDefault();
+        }
+      });
+    });
+
+    function validateEmail(email) {
+      var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email);
+    }
+  </script>
+</head>
+<body>
+<h1>Rabattcode anfordern</h1>
+<form id="rabattcodeForm" th:action="@{/rabattcode-anfordern}" method="post" hx-post="/rabattcode-anfordern" hx-target="#nachricht" hx-swap="outerHTML">
+  <label for="email">E-Mail Adresse:</label>
+  <input type="email" id="email" name="email" required>
+  <button type="submit">Rabattcode anfordern</button>
+</form>
+<div id="nachricht"></div>
+<script>
+  document.body.addEventListener('htmx:afterRequest', function(event) {
+    if (event.detail.success) {
+      document.getElementById('email').value = ''; // Setzt das E-Mail-Feld zurück
+    }
+  });
+</script>
+</body>
+</html>
